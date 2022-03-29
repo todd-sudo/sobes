@@ -82,8 +82,80 @@
 
     ```
     https://apirobot.me/posts/iterables-iterators-generators-in-python
-    https://coderlessons.com/tutorials/python-technologies/izuchite-strukturu-dannykh-python/python-khesh-tablitsa
+
+    https://coderlessons.com/tutorials/python-technologies/
+    
+    izuchite-strukturu-dannykh-python/python-khesh-tablitsa
     ```
+
+    `Итератор` – любой объект, реализующий метод `__next__`, который возвращает
+    следующий элемент в очереди или выбрасывает исключение StopIteration, если не осталось элементов.
+
+    `Итерируемый объект` – любой объект, реализующий метод `__iter__` или
+     `__getitem__`. Итерируемым объектом является любая коллекция: список, кортеж, словарь, и т.д.
+
+     `Цель итерируемого объекта` – создать итератор. Для этого у него есть метод
+      `__iter__`, при каждом обращении к которому создается новый итератор.
+
+    `Цель итератора` – пройтись по элементам. Для этого у него есть метод
+     `__next__`, который возвращает элементы один за другим.
+
+     ``` python
+     
+    items = [1, 2, 3]
+    it = iter(items)
+
+    while True:
+        try:
+            print(next(it))
+        except StopIteration:
+            break
+
+    # >> 1
+    # >> 2
+    # >> 3
+
+     ```
+
+    `Генератор` – функция, которая генерирует значения. Она отличается от
+    обычной функции тем, что может приостанавливать свое выполнение, возвращать
+    промежуточный результат, а затем возобновлять выполнение в любой момент
+    времени.
+
+    ``` python
+
+    def generator():
+        for i in range(3):
+            yield i
+
+
+    for i in generator():
+        print(i)
+
+    # >> 0
+    # >> 1
+    # >> 2
+
+
+    >>> # Вручную
+    >>> gen = generator()
+    <generator object generator at 0x7f38572b96d0>
+    >>> next(gen)
+    0
+    >>> next(gen)
+    1
+    >>> next(gen)
+    2
+    >>> next(gen)
+    Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+    StopIteration
+    ```
+
+    Генератор является итератором. Отличие итератора от генератора в том, что
+    итератор извлекает элементы из коллекции (список, кортеж, …), а генератор
+    может порождать элементы из воздуха.
+
 
 
 5. ### Декораторы
