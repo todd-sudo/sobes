@@ -190,11 +190,74 @@
     может порождать элементы из воздуха.
 
 
+5. ### Python — хэш-таблица
 
-5. ### Декораторы
+    `Хеш-таблицы` — это тип структуры данных, в которой адрес или значение
+    индекса элемента данных генерируются из хеш-функции.
+    Другими словами, в хэш-таблице хранятся пары ключ-значение, но ключ 
+    генерируется с помощью функции хеширования.
+    __Cами значения ключей становятся индексом массива__
 
 
-6. ### Метаклассы, Абстрактные классы
+6. ### Декораторы
+
+    `Декоратор` - это функция, которая меняет поведение другой функции, не меняя ее код.
+
+    ``` python
+    def bread(func):
+        def wrapper():
+            print()
+            func()
+            print("<\______/>")
+        return wrapper
+
+
+    def ingredients(func):
+        def wrapper():
+            print("#помидоры#")
+            func()
+            print("~салат~")
+        return wrapper
+
+
+    def sandwich(food="--ветчина--"):
+        print(food)
+
+
+    sandwich = bread(ingredients(sandwich))
+    sandwich()
+    ```
+
+    __Синтаксический сахар__
+
+    ``` python
+    def bread(func):
+        def wrapper():
+            print()
+            func()
+            print("<\______/>")
+        return wrapper
+
+
+    def ingredients(func):
+        def wrapper():
+            print("#помидоры#")
+            func()
+            print("~салат~")
+        return wrapper
+
+
+    @bread
+    @ingredients
+    def sandwich(food="--ветчина--"):
+        print(food)
+
+
+    sandwich()
+    ```
+
+
+7. ### Метаклассы, Абстрактные классы
     
     `Абстрактный класс` - в Python нет интерфейсов, это класс у которого нельзя создать объект. Он нужен для того чтобы создать контракт, который должны реализовать дочерние методы
 
@@ -260,22 +323,132 @@
 
 
 
-7. ### Базы данных
+8. ### Базы данных
 
     - NoSQL (Mongo, Redis)
 
     - SQL (Postgres, MySQL)
 
         - Связи(3) - реализация
-        - Запросы (SELECT JOIN HAVING GROUP BY)
+            - `Многие ко многим.`
+                ``` sql
+                PRAGMA foreign_keys=on;
+                
+                CREATE TABLE books(
+                    Id INTEGER PRIMARY KEY,
+                    title TEXT NOT NULL,
+                    count_page INTEGER NOT NULL CHECK (count_page >0),
+                    price REAL CHECK (price >0)
+                );
+                
+                CREATE TABLE auth(
+                    id INTEGER PRIMARY KEY,
+                    name TEXT NOT NULL,
+                    age INTEGER  CHECK (age >16)
+                );
+                
+                CREATE TABLE auth_book (
+                    auth_id INTEGER NOT NULL,
+                    books_id INTEGER NOT NULL,
+                    FOREIGN KEY (auth_id) REFERENCES auth(id)
+                    FOREIGN KEY (books_id) REFERENCES books(id)
+                );
+                ```
+            - `Один ко многим.`
+
+                ``` sql
+                PRAGMA foreign_keys=on;
+                
+                CREATE TABLE books(
+                    Id INTEGER PRIMARY KEY,
+                    title TEXT NOT NULL,
+                    count_page INTEGER NOT NULL CHECK (count_page >0),
+                    price REAL CHECK (price >0),
+                    auth_id INTEGER NOT NULL,
+                    FOREIGN KEY (auth_id) REFERENCES auth(id)
+                );
+                
+                CREATE TABLE auth(
+                    id INTEGER PRIMARY KEY,
+                    name TEXT NOT NULL,
+                    age INTEGER  CHECK (age >16)
+                );
+                ```
+            - `Один к одному.`
+        - Запросы
+
+            #### - `INNER JOIN (Внутреннее соединение)` - предназначен для соединения двух или более таблиц базы данных по совпадающему условию.
+                
+                Объединяет поля строки из одной таблицы с полями другой, если выполняется условие, 
+                что покупатель товара (family_member) совпадает с идентификатором члена семьи (member_id):
+
+                    ```sql 
+                        SELECT * FROM Payments  JOIN FamilyMembers ON family_member = member_id;
+                    ```
+
+            #### - `LEFT OUTER JOIN (Внешнее левое соединение)`
+
+                В выборку попадают все строки из левой таблицы, дополненные данными о занятиях.
+
+            #### - `(RIGHT OUTER JOIN Внешнее правое соединение)`
+
+                Соединение, которое возвращает все значения из правой таблицы, соединённые с соответствующими 
+                значениями из левой таблицы если они удовлетворяют условию соединения, или заменяет их на NULL в обратном случае.
+
+            #### - ` FULL OUTER JOIN (Внешнее полное соединение)`
+
+                Соединение, которое выполняет внутреннее соединение записей и дополняет их левым внешним соединением и правым внешним соединением.
+
+            #### - `Оператор SQL HAVING`
+
+            является указателем на результат выполнения агрегатных функций. Агрегатной функцией в языке 
+            SQL называется функция, возвращающая какое-либо одно значение по набору значений столбца. 
+            Такими функциями являются: `SQL COUNT(), SQL MIN(), SQL MAX(), SQL AVG(), SQL SUM()`.
+
+            ```sql
+            SELECT Singer, SUM(Sale) # выбирает исполнителей и число продаж
+            FROM Artists # из таблицы Артисты
+            GROUP BY Singer
+            HAVING SUM(Sale) > 2000000 # когда число продаж больше 2000000
+            ```
+
+            `Вывод:`
+            ```sql
+            Singer 	        Sum(Sale)
+
+            Massive Attack 	54000000
+            The Prodigy 	33000000
+            ```
+
+
+            Выводит название исполнителя, который исполнялся еще до 1995 года
+            ```sql
+            SELECT Singer, MIN(Year)
+            FROM Artists
+            GROUP BY Singer
+            HAVING MIN(Year) < 1995
+            ```
+
+            `Вывод:`
+            ```sql
+            Singer 	        MIN(Year)
+            
+            The Prodigy 	1994
+                ```
+
+            
+
         - Индексы
+
+            Индексы нужны, если мы часто используем какие-либо поля, мы назначаем индекс этому полю
+
         - Триггеры
         - Транзакции
         - ACID (википедия)
         - Уровни изолированности транзакции(4) (+-)
 
 
-6. ### Docker
+9. ### Docker
 
     - Чем отличается докер от виртуальной машины
     - image - образ 
@@ -287,7 +460,7 @@
 
 
 
-6. ### WEB
+10. ### WEB
 
     - REST - набор архитектурных принципов построения сервис-ориентированных систем.
 
