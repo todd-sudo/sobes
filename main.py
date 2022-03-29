@@ -1,7 +1,6 @@
-def generator():
-    for i in range(3):
-        yield i
+class B:
+    def _private(self):
+        print("Это приватный метод!")
 
-
-for i in generator():
-    print(i)
+b = B()
+b._private()
