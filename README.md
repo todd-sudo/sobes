@@ -113,13 +113,11 @@
 
 4. ### Генераторы и итераторы
 
-    ```
-    https://apirobot.me/posts/iterables-iterators-generators-in-python
+    1) https://apirobot.me/posts/iterables-iterators-generators-in-python
 
-    https://coderlessons.com/tutorials/python-technologies/
+    2) https://coderlessons.com/tutorials/python-technologies/
     
-    izuchite-strukturu-dannykh-python/python-khesh-tablitsa
-    ```
+    3) izuchite-strukturu-dannykh-python/python-khesh-tablitsa
 
     `Итератор` – любой объект, реализующий метод `__next__`, который возвращает
     следующий элемент в очереди или выбрасывает исключение StopIteration, если не осталось элементов.
